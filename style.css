@@ -1,0 +1,224 @@
+:root {
+  --title: #fff;
+  --bg: #0059ff;
+  --kw: #fff;
+  --bg-selected: #999999;
+  --kw-selected: #0021a5;
+  --other-kw-selected: rgb(255, 255, 255);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--kw);
+  font-family: "Inter", sans-serif;
+  overflow: hidden;
+  font-variation-settings: "wght" 400;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+
+body.has-selection {
+  background: var(--bg-selected);
+  color: var(--kw-selected);
+}
+
+.slide {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+}
+.slide.active {
+  display: block;
+}
+
+/* Mantenha o z-index original para não cobrir a tipografia */
+.img-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.scattered-img {
+    position: absolute;
+    width: clamp(360px, 28vw, 580px);
+    height: auto;
+    object-fit: cover;
+    opacity: 0;
+    transform-origin: center center;
+    transform: rotate(var(--rot)) scale(1);
+    
+    /* Novo: Aplica o filtro P&B e adiciona a transição suave */
+    filter: grayscale(100%);
+    transition: opacity 0.4s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.4s ease;
+    
+    border-radius: 2px;
+    pointer-events: auto;
+  }
+
+
+.scattered-img.visible {
+  opacity: 1;
+}
+
+  .scattered-img:hover {
+    transform: rotate(calc(var(--rot) + 4deg)) scale(1.05);
+    z-index: 10 !important;
+    
+    /* Novo: Remove o P&B no hover revelando a cor original */
+    filter: grayscale(0%);
+  }
+
+.title {
+  color: var(--title);
+  position: absolute;
+  top: 50%;
+  left: 4vw;
+  transform: translateY(-50%);
+  text-align: left;
+  font-size: clamp(2.5rem, 7vw, 10rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  max-width: 90vw;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.keywords {
+  position: absolute;
+  bottom: 6vh;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0 4vw;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.keyword {
+  display: inline-block;
+  font-size: 2.4rem;
+  font-weight: 400;
+  cursor: pointer;
+  pointer-events: auto;
+  word-break: break-all;
+  transition:
+    font-variation-settings 0.5s ease,
+    font-size 0.5s ease,
+    color 0.3s ease;
+  font-variation-settings: "wght" 400;
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><circle cx="20" cy="20" r="18" fill="green"/></svg>')
+      20 20,
+    pointer;
+}
+
+.keyword:hover {
+  font-size: calc(2.4rem + 0.4rem);
+  font-variation-settings: "wght" 700;
+}
+
+.keyword.selected {
+  font-size: calc(2.4rem + 0.4rem);
+  font-variation-settings: "wght" 700;
+  color: var(--kw-selected);
+}
+
+body.has-selection .keyword:not(.selected) {
+  color: var(--other-kw-selected);
+}
+
+/* navigation zones */
+.nav-zone {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  z-index: 0;
+}
+.nav-left {
+  left: 0;
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="24" viewBox="0 0 40 24"><path d="M38 12H2M2 12L14 2M2 12L14 22" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+      20 12,
+    w-resize;
+}
+.nav-right {
+  right: 0;
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="24" viewBox="0 0 40 24"><path d="M2 12H38M26 2L38 12M26 22L38 12" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+      20 12,
+    e-resize;
+}
+
+body.has-selection .nav-left {
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="24" viewBox="0 0 40 24"><path d="M38 12H2M2 12L14 2M2 12L14 22" stroke="blue" stroke-width="4" fill="none"  stroke-linejoin="round"/></svg>')
+      20 12,
+    w-resize;
+}
+body.has-selection .nav-right {
+  cursor:
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="24" viewBox="0 0 40 24"><path d="M2 12H38M26 2L38 12M26 22L38 12" stroke="blue" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+      20 12,
+    e-resize;
+}
+
+/* Estilos da barra superior */
+#top-bar {
+  position: absolute;
+  top: 4vh;
+  left: 4vw;
+  right: 4vw;
+  display: flex;
+  justify-content: space-between;
+  z-index: 100; /* Garante que fique acima de tudo, inclusive imagens em hover */
+  pointer-events: none; /* Deixa os cliques vazarem onde não tem texto */
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  font-weight: 400;
+  font-variation-settings: "wght" 400;
+  color: inherit; /* Herda a cor do body (branco no normal, preto no selected) */
+}
+
+#presentation-label {
+  pointer-events: auto; /* Reativa o clique apenas no texto */
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+#slide-counter {
+  pointer-events: auto;
+}
+
+
+/* Animação de rotação contínua */
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  #spinning-star {
+    position: absolute;
+    bottom: 4vh; /* Alinhado com a altura do texto das keywords */
+    right: 4vw;  /* Posicionado no canto inferior direito */
+    width: 15px;
+    height: 15px;
+    z-index: 100;
+    pointer-events: none;
+    color: inherit; /* Herda a cor do body (branco ou preto) */
+    animation: spin 12s linear infinite; /* Rotação lenta e constante */
+  }

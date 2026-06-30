@@ -3,11 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Slides</title>
+    <title>NOO.WORKS + MIGLITO</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
 </head>
 
 <body>
@@ -172,7 +173,13 @@
 
                 const titleEl = document.createElement('div');
                 titleEl.className = 'title';
-                titleEl.textContent = slide.title;
+                [...slide.title].forEach((ch, idx) => {
+                    const charEl = document.createElement('span');
+                    charEl.className = 'title-char';
+                    charEl.style.setProperty('--char-i', idx);
+                    charEl.textContent = ch === ' ' ? '\u00A0' : ch;
+                    titleEl.appendChild(charEl);
+                });
                 slideEl.appendChild(titleEl);
 
                 const kwWrap = document.createElement('div');

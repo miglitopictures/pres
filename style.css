@@ -94,6 +94,19 @@ body.has-selection {
   z-index: 2;
 }
 
+.title-char {
+  display: inline-block;
+  /* slow up/down bob, offset per character to read as a traveling wave */
+  animation: title-bob 6s ease-in-out infinite;
+  animation-delay: calc(var(--char-i) * -0.18s);
+  will-change: transform;
+}
+
+@keyframes title-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-0.12em); }
+}
+
 .keywords {
   position: absolute;
   bottom: 6vh;

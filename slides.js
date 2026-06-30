@@ -1,10 +1,11 @@
-
-
 const slides = [
     {
         title: "Bom dia :)",
         keywords: [
-            "Tecnologia e Criação",
+            { 
+                text: "Tecnologia e Criação", 
+                images: ["tecnologia-1.png", "tecnologia-2.png", "tecnologia-3.png", "tecnologia-4.png"] 
+            },
             "TQSQSSPMNTCP",
             "O Lore"
         ]
@@ -21,11 +22,17 @@ const slides = [
         title: "Como Estética",
         keywords: [
             "Manual",
-            { text: "Compasso", images: ["compasso-1.png", "compasso-2.png", "compasso-3.png", "impressora-ruim.png"] },
-            { text: "Ponta do Curral", images: ["ponta-carbono.jpg", "ponta-procreate.jpg", "ponta-caderno.jpg", "ponta-paisagem.jpg"] },
+            { text: "Compasso", images: ["compasso-1.gif", "compasso-2.jpeg", "compasso-3.gif", "compasso-4.jpeg"] },
+            {
+                text: "Ponta do Curral",
+                images: [
+                    { image: "pdc-1.png", href: "https://www.figma.com/board/B3wh33XpJRfPTjKQ2t8EHJ/PDC---Revis%C3%A3o-Elementos-Gr%C3%A1ficos?node-id=0-1&p=f&t=dmpdNes2paDMsWUk-0" },
+                    "pdc-2.gif", "pdc-3.png", "pdc-4.png", "pdc-5.png", "pdc-6.png", "pdc-7.png"
+                ]
+            },
             "Digital",
             { text: "Finalmente Eu", images: ["finally_me-1.png", "finally_me-2.png", "finally_me-3.png"] },
-            { text: "Histérica", images: ["histerica-fofa.png", "histerica-bruta.png", "histerica-servir.png"] },
+            { text: "Histérica", images: ["histerica-1.png", "histerica-2.png", "histerica-3.png", "histerica-4.png", "histerica-5.png"] },
         ]
     },
     {
@@ -41,18 +48,17 @@ const slides = [
         title: "IA e criação de ferramentas",
         keywords: [
             "Barreira Técnica",
-            "p5js",
+            { text: "p5js", images: [{ image: "p5-1.png", href: "https://p5js.org/" }] },
             {
                 text: "Visu Haus",
                 images: [
-                    { image: "visu-haus-1.jpg", href: "https://visu.haus/" },
-                    "visu-haus-2.jpg"
+                    { image: "visu-1.png", href: "https://visu.haus/" }
                 ]
             },
             {
                 text: "Plate",
                 images: [
-                    { image: "plate-ui.jpg", href: "https://app.plate.video/" }
+                    { image: "plate-1.png", href: "https://app.plate.video/" }
                 ]
             }
         ]
@@ -63,29 +69,31 @@ const slides = [
             {
                 text: "Next Studio",
                 images: [
-                    { image: "converse-1.jpg", href: "https://nextstudio.vercel.app/tools/limitless" },
-                    "converse-2.jpg",
-                    "converse-3.jpg"
+                    { image: "next-1.png", href: "https://nextstudio.vercel.app/tools/limitless" },
+                    "next-2.png",
+                    "next-3.mp4"
                 ]
             },
             {
                 text: "Guilt By Association",
                 images: [
-                    { image: "gba-rabisco.jpg", href: "https://gba-logo.netlify.app/" },
-                    "gba-pintura.jpg",
-                    "gba-neon.jpg"
+                    { image: "gba-1.png", href: "https://gba-logo.netlify.app/" },
+                    { image: "gba-3.png", href: "https://cotton.design/work/guilty-by-association" }
                 ]
             },
             {
                 text: "BCG Image Gen",
                 images: [
-                    { image: "bcg-unreal-1.jpg", href: "https://someform.studio/BCG" },
-                    "bcg-unreal-2.jpg"
+                    { image: "bcg-1.jpg", href: "https://someform.studio/BCG" },
+                    "bcg-2.jpg"
                 ]
             },
             {
                 text: "Deepmind 3D",
-                images: ["deepmind-1.jpg", "deepmind-2.jpg"]
+                images: [
+                    { image: "deepmind-1.jpg", href: "https://someform.studio/DeepMindTool" },
+                    "deepmind-2.jpg", "deepmind-3.jpg"
+                ]
             }
         ]
     },
@@ -95,25 +103,35 @@ const slides = [
             {
                 text: "Rio Carnaval",
                 images: [
-                    { image: "rio-carnaval-p5.jpg", href: "https://tatil.com.br/riocarnaval2022/" },
-                    "rio-carnaval-frame.jpg"
+                    { image: "rio-1.png", href: "https://tatil.com.br/riocarnaval2022/" }
                 ]
             },
             {
                 text: "Enjoei",
-                images: ["enjoei-1.jpg", "enjoei-2.jpg", "enjoei-3.jpg"]
+                images: [
+                    { image: "enjoei-1.png", href: "https://www.behance.net/gallery/167548923/Enjoei" },
+                    "enjoei-2.png"
+                ]
             },
             {
                 text: "Philharmonie Luxembourg",
-                images: ["philharmonie-1.jpg", "philharmonie-2.jpg"]
+                images: [
+                    { image: "philarmonie-1.png", href: "https://www.patrik-huebner.com/generative-design/philharmonie-luxembourg-a-dynamic-identity-that-interacts-with-the-sound-of-live-music/" }
+                ]
             },
             {
                 text: "CIDDIC",
-                images: ["philharmonie-1.jpg", "philharmonie-2.jpg"]
+                images: [
+                    { image: "ciddic-1.png", href: "https://www.andreburnier.com/project/ciddic" },
+                    "ciddic-2.png", "ciddic-3.png", "ciddic-4.png", "ciddic-5.gif"
+                ]
             },
             {
                 text: "Caracol",
-                images: ["caracol-1.jpg", "caracol-2.jpg", "caracol-3.jpg", "caracol-4.jpg", "caracol-5.jpg"]
+                images: [
+                    { image: "caracol-1.gif", href: "https://sometimes-always.com/projects/caracol/" },
+                    "caracol-2.jpeg", "caracol-3.jpeg", "caracol-4.gif", "caracol-5.jpeg"
+                ]
             },
         ]
     },

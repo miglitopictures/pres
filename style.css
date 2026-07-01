@@ -40,7 +40,6 @@ body.has-selection {
   display: block;
 }
 
-/* Mantenha o z-index original para não cobrir a tipografia */
 .img-layer {
   position: absolute;
   inset: 0;
@@ -49,34 +48,36 @@ body.has-selection {
 }
 
 .scattered-img {
-    position: absolute;
-    width: clamp(360px, 28vw, 580px);
-    height: auto;
-    object-fit: cover;
-    opacity: 0;
-    transform-origin: center center;
-    transform: rotate(var(--rot)) scale(1);
-    
-    /* Novo: Aplica o filtro P&B e adiciona a transição suave */
-    filter: grayscale(100%);
-    transition: opacity 0.4s ease, transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.4s ease;
-    
-    border-radius: 2px;
-    pointer-events: auto;
-  }
+  position: absolute;
+  width: clamp(360px, 28vw, 580px);
+  height: auto;
+  object-fit: cover;
+  opacity: 0;
+  transform-origin: center center;
+  transform: rotate(var(--rot)) scale(1);
 
+  /* Novo: Aplica o filtro P&B e adiciona a transição suave */
+  filter: grayscale(100%);
+  transition:
+    opacity 0.4s ease,
+    transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    filter 0.4s ease;
+
+  border-radius: 2px;
+  pointer-events: auto;
+}
 
 .scattered-img.visible {
   opacity: 1;
 }
 
-  .scattered-img:hover {
-    transform: rotate(calc(var(--rot) + 4deg)) scale(1.05);
-    z-index: 10 !important;
-    
-    /* Novo: Remove o P&B no hover revelando a cor original */
-    filter: grayscale(0%);
-  }
+.scattered-img:hover {
+  transform: rotate(calc(var(--rot) + 4deg)) scale(1.05);
+  z-index: 10 !important;
+
+  /* Novo: Remove o P&B no hover revelando a cor original */
+  filter: grayscale(0%);
+}
 
 .title {
   color: var(--title);
@@ -103,8 +104,13 @@ body.has-selection {
 }
 
 @keyframes title-bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-0.12em); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-0.12em);
+  }
 }
 
 .keywords {
@@ -217,21 +223,24 @@ body.has-selection .nav-right {
   pointer-events: auto;
 }
 
-
 /* Animação de rotação contínua */
-  @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
+  to {
+    transform: rotate(360deg);
+  }
+}
 
-  #spinning-star {
-    position: absolute;
-    bottom: 4vh; /* Alinhado com a altura do texto das keywords */
-    right: 4vw;  /* Posicionado no canto inferior direito */
-    width: 15px;
-    height: 15px;
-    z-index: 100;
-    pointer-events: none;
-    color: inherit; /* Herda a cor do body (branco ou preto) */
-    animation: spin 12s linear infinite; /* Rotação lenta e constante */
-  }
+#spinning-star {
+  position: absolute;
+  bottom: 4vh; /* Alinhado com a altura do texto das keywords */
+  right: 4vw; /* Posicionado no canto inferior direito */
+  width: 15px;
+  height: 15px;
+  z-index: 100;
+  pointer-events: none;
+  color: inherit; /* Herda a cor do body (branco ou preto) */
+  animation: spin 12s linear infinite; /* Rotação lenta e constante */
+}

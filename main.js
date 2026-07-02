@@ -1,127 +1,121 @@
-
 let currentSlide = 0;
 let selectedKw = null;
 
 // - elements-  //
-const slidesContainterEl = document.getElementById('slides-container'); // main container for content
-// topbar
+const slidesContainterEl = document.getElementById('slides-container'); 
 const counterEl = document.getElementById('slide-counter');
 const labelEl = document.getElementById('presentation-label');
 
-// Muda o texto no hover e restaura quando o mouse sai
-labelEl.addEventListener('mouseenter', () => {
-    labelEl.textContent = "leia texto base <-";
-});
-labelEl.addEventListener('mouseleave', () => {
-    labelEl.textContent = "Ferramentas de Desenhar";
-});
+labelEl.addEventListener('mouseenter', () => { labelEl.textContent = "leia texto base <-"; });
+labelEl.addEventListener('mouseleave', () => { labelEl.textContent = "Ferramentas de Desenhar"; });
 
-// Função para atualizar o número da página
 function updateCounter() {
     counterEl.textContent = `${currentSlide + 1}/${slides.length}`;
 }
-// ------------------------------
 
 function rand(min, max) { return Math.random() * (max - min) + min; }
 
 let clearTimeoutId = null;
 
-function scatterImages(slideEl, images) {
-    if (clearTimeoutId) { clearTimeout(clearTimeoutId); clearTimeoutId = null; }
-    const layer = slideEl.querySelector('.img-layer');
-    layer.innerHTML = '';
+// ---- CONTENT RENDERERS REGISTRY ----
+const contentRenderers = {
+    scatter: (slideEl, kwData) => {
+        // Cancel any pending clear before writing new images
+        if (clearTimeoutId) { clearTimeout(clearTimeoutId); clearTimeoutId = null; }
 
-    images.forEach((item, i) => {
-        const isObject = typeof item === 'object' && item !== null;
-        const src = isObject ? item.image : item;
-        const href = isObject ? item.href : null;
+        const layer = slideEl.querySelector('.img-layer');
+        layer.innerHTML = '';
 
-        const img = document.createElement('img');
-        img.className = 'scattered-img';
-        img.src = "./images/" + src;
-        img.style.left = rand(5, 75) + 'vw';
-        img.style.top = rand(5, 65) + 'vh';
+        kwData.images.forEach((item, i) => {
+            const isObject = typeof item === 'object' && item !== null;
+            const src = isObject ? item.image : item;
+            const href = isObject ? item.href : null;
 
-        // Salva a rotação aleatória em uma Variável CSS para o :hover usar
-        const randomRot = rand(-8, 8);
-        img.style.setProperty('--rot', `${randomRot}deg`);
+            const img = document.createElement('img');
+            img.className = 'scattered-img';
+            img.src = "./images/" + src;
+            img.style.left = rand(5, 75) + 'vw';
+            img.style.top = rand(5, 65) + 'vh';
 
-        img.style.zIndex = i + 1;
-
-        // Se houver um link, muda para o cursor de anexo. Se não, círculo vermelho.
-        if (href) {
-            // SVG de clipe de papel (anexo)
-            img.style.cursor = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>') 16 16, pointer`;
-        } else {
-            // SVG de círculo vermelho grande
-            img.style.cursor = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><circle cx="20" cy="20" r="18" fill="red"/></svg>') 20 20, pointer`;
-        }
-
-
-
-        // Lida com o clique nas imagens
-        img.addEventListener('click', (e) => {
-            e.stopPropagation();
+            const randomRot = rand(-8, 8);
+            img.style.setProperty('--rot', `${randomRot}deg`);
+            img.style.zIndex = i + 1;
 
             if (href) {
-                window.open(href, '_blank'); // Abre o link
+                img.style.cursor = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>') 16 16, pointer`;
             } else {
-                // Se não tiver link, o clique na imagem ainda troca o slide
-                const clickX = e.clientX;
-                const halfScreen = window.innerWidth / 2;
-                if (clickX < halfScreen) {
-                    goTo(currentSlide - 1); // Clicou na metade esquerda
-                } else {
-                    goTo(currentSlide + 1); // Clicou na metade direita
-                }
+                img.style.cursor = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><circle cx="20" cy="20" r="18" fill="red"/></svg>') 20 20, pointer`;
             }
+
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (href) {
+                    window.open(href, '_blank');
+                } else {
+                    const clickX = e.clientX;
+                    const halfScreen = window.innerWidth / 2;
+                    clickX < halfScreen ? goTo(currentSlide - 1) : goTo(currentSlide + 1);
+                }
+            });
+
+            layer.appendChild(img);
+
+            requestAnimationFrame(() => {
+                setTimeout(() => img.classList.add('visible'), i * 60);
+            });
         });
+    }
+};
 
-        layer.appendChild(img);
-
-        // stagger fade-in
-        requestAnimationFrame(() => {
-            setTimeout(() => img.classList.add('visible'), i * 60);
-        });
-    });
-}
-
-function clearImages(slideEl) {
+// ---- CLEAN UP LOGIC ----
+function clearActiveContent(slideEl) {
     if (clearTimeoutId) { clearTimeout(clearTimeoutId); clearTimeoutId = null; }
     const layer = slideEl.querySelector('.img-layer');
-    layer.querySelectorAll('.scattered-img').forEach(img => {
-        img.classList.remove('visible');
-    });
-    clearTimeoutId = setTimeout(() => { layer.innerHTML = ''; clearTimeoutId = null; }, 420);
+    
+    layer.querySelectorAll('.scattered-img').forEach(img => img.classList.remove('visible'));
+    
+    clearTimeoutId = setTimeout(() => { 
+        layer.innerHTML = ''; 
+        clearTimeoutId = null; 
+    }, 420);
 }
 
 function clearSelection() {
     if (selectedKw) {
         const slideEl = document.querySelector('.slide.active');
-        clearImages(slideEl);
+        clearActiveContent(slideEl);
         selectedKw.classList.remove('selected');
     }
     selectedKw = null;
     document.body.classList.remove('has-selection');
 }
 
+// ---- KEYWORD SELECTION ----
 function selectKeyword(el, kwData) {
     const slideEl = document.querySelector('.slide.active');
+    
     if (selectedKw === el) {
         clearSelection();
         return;
     }
-    // clear previous
+    
     if (selectedKw) {
         selectedKw.classList.remove('selected');
-        clearImages(slideEl);
+        clearActiveContent(slideEl);
     }
+    
     selectedKw = el;
     el.classList.add('selected');
     document.body.classList.add('has-selection');
 
     if (kwData.images && kwData.images.length) {
-        scatterImages(slideEl, kwData.images);
+        const layoutType = kwData.type || 'scatter'; 
+        
+        if (contentRenderers[layoutType]) {
+            contentRenderers[layoutType](slideEl, kwData);
+        } else {
+            console.warn(`Renderer type "${layoutType}" is not configured.`);
+        }
     }
 }
 
@@ -133,7 +127,6 @@ function renderSlides() {
         slideEl.className = 'slide' + (i === currentSlide ? ' active' : '');
         slideEl.dataset.index = i;
 
-        // image scatter layer (behind everything)
         const imgLayer = document.createElement('div');
         imgLayer.className = 'img-layer';
         slideEl.appendChild(imgLayer);
@@ -177,7 +170,6 @@ function goTo(index) {
     document.querySelectorAll('.slide').forEach(s => {
         s.classList.toggle('active', Number(s.dataset.index) === currentSlide);
     });
-
     updateCounter();
 }
 
@@ -191,4 +183,4 @@ document.addEventListener('keydown', (e) => {
 });
 
 renderSlides();
-updateCounter(); 
+updateCounter();

@@ -44,7 +44,7 @@ const slides = [
             },
             { 
                 text: "Histérica", 
-                type: "scatter",
+                type: "grid",
                 images: ["histerica-1.jpg", "histerica-2.jpg", "histerica-3.jpg", "histerica-4.jpg", "histerica-5.jpg"] 
             },
         ]

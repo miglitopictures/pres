@@ -64,6 +64,54 @@ const contentRenderers = {
                 setTimeout(() => img.classList.add('visible'), i * 60);
             });
         });
+    },
+    grid: (slideEl, kwData) => {
+        // Cancel any pending clear before writing new images
+        if (clearTimeoutId) { clearTimeout(clearTimeoutId); clearTimeoutId = null; }
+
+        const layer = slideEl.querySelector('.img-layer');
+        layer.innerHTML = '';
+        const gridContainer = document.createElement('div');
+        gridContainer.className = 'grid-container';
+        layer.appendChild(gridContainer);
+
+
+        kwData.images.forEach((item, i) => {
+            const isObject = typeof item === 'object' && item !== null;
+            const src = isObject ? item.image : item;
+            const href = isObject ? item.href : null;
+
+            const img = document.createElement('img');
+            img.className = 'grid-img';
+            img.src = "./images/" + src;
+            // img.style.left = rand(5, 75) + 'vw';
+            // img.style.top = rand(5, 65) + 'vh';
+
+
+
+            if (href) {
+                img.style.cursor = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>') 16 16, pointer`;
+            } else {
+                img.style.cursor = `url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><circle cx="20" cy="20" r="18" fill="red"/></svg>') 20 20, pointer`;
+            }
+
+            img.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (href) {
+                    window.open(href, '_blank');
+                } else {
+                    const clickX = e.clientX;
+                    const halfScreen = window.innerWidth / 2;
+                    clickX < halfScreen ? goTo(currentSlide - 1) : goTo(currentSlide + 1);
+                }
+            });
+
+            gridContainer.appendChild(img);
+
+            requestAnimationFrame(() => {
+                setTimeout(() => img.classList.add('visible'), i * 60);
+            });
+        });
     }
 };
 
